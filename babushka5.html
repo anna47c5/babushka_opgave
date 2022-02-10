@@ -8,7 +8,10 @@
       content="width=
     , initial-scale=1.0"
     />
-    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Orbitron:wght@400;500&family=Rock+Salt&family=VT323&display=swap" rel="stylesheet">
+    <title>Bistro Babushka</title>
   </head>
 
   <style>
@@ -18,29 +21,62 @@
       padding: 0%;
       box-sizing: border-box;
     }
+
+    body {
+      background-color: rgb(238, 238, 238);
+      border: 8px double rgb(56, 55, 55);
+      padding-bottom: 60px;
+      margin: 10px;
+    }
     section {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 5px;
+      gap: 60px;
+      padding-left: 35px;
+      padding-right: 35px;
     }
     article {
       border-style: solid;
     }
 
     h1 {
-      margin: 2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 500;
+      font-size: 3.5rem;
+      text-align: center;
+      letter-spacing: 8px;
+      color: rgb(56, 55, 55);
     }
 
     h2 {
-      margin: 1.5rem;
+      font-size: 2.5rem;
+      font-family: 'Orbitron', sans-serif;
+      padding-left: 35px;
+      margin-bottom: 30px;
+      
+      color: rgb(56, 55, 55);
     }
 
     h3 {
-      margin: 1.5rem;
+      font-size: 1.8rem;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      padding: 10px;
     }
 
     p {
-      margin: 1.5rem;
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+      padding: 15px;
+    }
+
+    .navn {
+      font-size: 1.6rem;
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 0px;
+      margin-top: 0px;
+      color: #E05A42;
     }
 
     img {
@@ -48,32 +84,65 @@
     }
 
     button {
+      cursor: pointer;
+      background-color: white;
+      color: #E05A42;
+      font-family: 'VT323', monospace;
+      font-size: 1.5rem;
+      padding: 10px 20px;
+      margin: 18px;
+      margin-top: 0px;
+      margin-bottom: 10px;
+      
+
+
+      /*padding: 10px 50px;
+      place-self: center;
+      margin-left: 35px;
+      margin-right: 35px;
+      margin-bottom: 10px;*/
+
     }
+
+  /* font-family: 'Black Ops One', cursive;
+font-family: 'Orbitron', sans-serif;
+font-family: 'Rock Salt', cursive;
+font-family: 'VT323', monospace; */
 
     nav {
       display: flex;
       flex-flow: wrap;
       place-content: center;
       gap: 1rem;
+      margin-top: 50px;
+      margin-bottom: 20px;
     }
 
     .valgt {
-      background-color: brown;
+      background-color: #4760F5;
+      color: white;
     }
 
     #modal {
       width: 100vw;
-      height: 100vh;
+      height: 110vh;
       display: none;
-      background-color: rgba(0, 0, 0, 0.459);
+      background-color: #4761f581;
       position: fixed;
+      place-content: center;
       margin: 1rem;
     }
 
     #modal article {
       max-width: 500px;
       margin: 2em auto;
-      background-color: blue;
+      background-color: #E05A42;
+    }
+
+    #maden article{
+      background-color: white;
+      border: 6px double rgb(56, 55, 55);
+      cursor: pointer;
     }
   </style>
   <body>
@@ -89,9 +158,21 @@
       </article>
     </aside>
     <div id="splash_image">
-      <img src="" alt="">
-      <h1>Bistro Babushka</h1></div>
+      <img src="splash.jpg" alt="Splash Billede">
+      <!--<h1>Bistro Babushka</h1>--> </div>
     <!-- Splash image og overskrift -->
+   
+    <!-- Navigationsbar til at vælge mellem de forskellige mad-kategorier (Data-kategori er ligesom et ID) -->
+    <section>
+      <nav>
+        <button data-kategori="alt" class="valgt">Alle retter</button>
+        <button data-kategori="forretter">Forretter</button>
+        <button data-kategori="hovedretter">Hovedretter</button>
+        <button data-kategori="desserter">Desserter</button>
+        <button data-kategori="drikkevarer">Drikkevarer</button>
+      </nav>
+    </section>
+
     <section>
       <header>
         <img src="" alt="" />
@@ -99,16 +180,6 @@
       </header>
     </section>
 
-    <!-- Navigationsbar til at vælge mellem de forskellige mad-kategorier (Data-kategori er ligesom et ID) -->
-    <section>
-      <nav>
-        <button data-kategori="alt" class="valgt">Alt</button>
-        <button data-kategori="forretter">Forretter</button>
-        <button data-kategori="hovedretter">Hovedretter</button>
-        <button data-kategori="desserter">Desserter</button>
-        <button data-kategori="drikkevarer">Drikkevarer</button>
-      </nav>
-    </section>
 
     <!-- Tom section: LIGEGYLDIG -->
     <section></section>
@@ -193,7 +264,7 @@
           klon.querySelector(".navn").textContent = retter.navn;
           klon.querySelector(".kortbeskrivelse").textContent =
             retter.kortbeskrivelse;
-          klon.querySelector(".pris").textContent = " Denne her koster " + retter.pris + " kr.";
+          klon.querySelector(".pris").textContent = "Pris: " + retter.pris + " kr.";
           klon
             .querySelector("article")
             .addEventListener("click", () => visDetaljer(retter));
