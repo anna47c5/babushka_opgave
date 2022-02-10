@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=
+    , initial-scale=1.0"
+    />
+    <title>Document</title>
+  </head>
+
+  <style>
+
+    * {
+      margin: 0%;
+      padding: 0%;
+      box-sizing: border-box;
+    }
+    section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 5px;
+    }
+    article {
+      border-style: solid;
+    }
+
+    h1 {
+      margin: 2rem;
+    }
+
+    h2 {
+      margin: 1.5rem;
+    }
+
+    h3 {
+      margin: 1.5rem;
+    }
+
+    p {
+      margin: 1.5rem;
+    }
+
+    img {
+      width: 100%;
+    }
+
+    button {
+    }
+
+    nav {
+      display: flex;
+      flex-flow: wrap;
+      place-content: center;
+      gap: 1rem;
+    }
+
+    .valgt {
+      background-color: brown;
+    }
+
+    #modal {
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      background-color: rgba(0, 0, 0, 0.459);
+      position: fixed;
+      margin: 1rem;
+    }
+
+    #modal article {
+      max-width: 500px;
+      margin: 2em auto;
+      background-color: blanchedalmond;
+    }
+  </style>
+  <body>
+    <!-- Aside bruger vi som en skabelon, når man trykker på en fødevare (Single view) -->
+    <aside id="modal">
+      <article>
+        <img src="" alt="" />
+        <h3></h3>
+        <p class="kortbeskrivelse"></p>
+        <p class="langbeskrivelse"></p>
+        <p class="oprindelsesregion"></p>
+        <p class="pris"></p>
+      </article>
+    </aside>
+    <div id="splash_image">
+      <img src="" alt="">
+      <h1>Bistro Babushka</h1></div>
+    <!-- Splash image og overskrift -->
+    <section>
+      <header>
+        <img src="" alt="" />
+        <h1 id="what">Alle retter</h1>
+      </header>
+    </section>
+
+    <!-- Navigationsbar til at vælge mellem de forskellige mad-kategorier (Data-kategori er ligesom et ID) -->
+    <section>
+      <nav>
+        <button data-kategori="alt" class="valgt">Alt</button>
+        <button data-kategori="forretter">Forretter</button>
+        <button data-kategori="hovedretter">Hovedretter</button>
+        <button data-kategori="desserter">Desserter</button>
+        <button data-kategori="drikkevarer">Drikkevarer</button>
+      </nav>
+    </section>
+
+    <!-- Tom section: LIGEGYLDIG -->
+    <section></section>
+    <h2>Menu</h2>
+    
+    <section id="maden">
+      <!-- TEMPLATE: Ligesom et tag (article eller section), du kan ikke se din template, den er usynlig og en gennemsigtig skabelon -->
+      <template>
+        <article>
+          <img src="" alt="" class="billedeurl" />
+          <h2 class="navn"></h2>
+          <p class="kortbeskrivelse"></p>
+          <p class="pris"></p>
+        </article>
+      </template>
+    </section>
+  </body>
+
+  <script>
+    const url = "https://babushka-dd8a.restdb.io/rest/menu";
+    // const url: Er linket til databasen, med alt vores data til opgaven
+    // settings, test data, tag link, husk at fjerne max
+    // key = database, API keys, manage dem --> Selve nøglen
+
+    const options = {
+      headers: {
+        "x-apikey": "600ec2fb1346a1524ff12de4",
+      },
+    };
+    // Ovenstående er API Key til at låse URL med data op.
+
+    let json;
+    let myKatogri = "alt";
+
+    const main = document.querySelector("#maden");
+    const template = document.querySelector("template").content;
+    const header = document.querySelector("#what");
+    const modal = document.querySelector("#modal");
+    // OKAY OKAY!! Så nede i min asynkrone funktion henter jeg altså både
+    // min nøgle og mit link og venter på at det et hentet så jeg kan vise det
+    document.addEventListener("DOMContentLoaded", start);
+
+    function start() {
+      console.log("start");
+      const filterKnapper = document.querySelectorAll("nav button");
+      filterKnapper.forEach((knap) =>
+        knap.addEventListener("click", filtrerKategorier)
+      );
+
+      // Asynkron funktion er en funktion, som ikke behøver at ske samtidig med andre ting i dokumentet, altså den er ikke afhænging andre faktorer, den kører for sig selv. 
+      async function henData() {
+        const resspons = await fetch(url, options);
+        json = await resspons.json();
+        vis(json, myKatogri);
+      }
+
+      henData();
+    }
+     
+    // This kommunikerer således, at vores program ved hvilken knap der bliver trykket på, eftersom de alle er i en array - på denne måde kan man filtrere med THIS.
+    function filtrerKategorier() {
+      console.log("filtrerKategorier");
+      let klikketPaa = this.dataset.kategori;
+      console.log("klikketPaa :" + klikketPaa);
+      document.querySelector(".valgt").classList.remove("valgt");
+      this.classList.add("valgt");
+      header.textContent=this.textContent;
+      vis(json, klikketPaa);
+    }
+      // json: data, x: referer til klikketPaa, main.textContent sættes = ingenting, så den fjerner hvad der er i forvejen, på den måde kan vi åbne en ny knap.
+    function vis(json, x) {
+      console.log(json);
+     main.textContent = "";
+
+     //  if (retter.kategori == x || x == "alt") = enten viser man det man har klikket på, ellers (||) viser den alt.
+      json.forEach((retter) => {
+        if (retter.kategori == x || x == "alt") {
+          const klon = template.cloneNode(true);
+
+          klon.querySelector(".billedeurl").src =
+            "images/" + retter.billednavn + "-md.jpg";
+          klon.querySelector(".navn").textContent = retter.navn;
+          klon.querySelector(".kortbeskrivelse").textContent =
+            retter.kortbeskrivelse;
+          klon.querySelector(".pris").textContent = " Denne her koster " + retter.pris + " kr.";
+          klon
+            .querySelector("article")
+            .addEventListener("click", () => visDetaljer(retter));
+          main.appendChild(klon);
+        }
+        // Append child = sætter ind/ jeg giver dig dette her - sætter noget ind i et tag, som findes i HTML. Den skal hive fat i main og derefter sætte en klon ind i main (child)
+      });
+      console.log(myKatogri);
+    }
+
+    function visDetaljer(retter) {
+      console.log("visDetajler" + retter);
+      modal.querySelector("h3").textContent = retter.navn;
+      modal.querySelector("img").src =
+        "images/" + retter.billednavn + "-md.jpg";
+      modal.querySelector(".kortbeskrivelse").textContent = retter.kortbeskrivelse;
+      modal.querySelector(".langbeskrivelse").textContent = retter.langbeskrivelse;
+      modal.querySelector(".oprindelsesregion").textContent = "Oprindelsesregion: " + retter.oprindelsesregion;
+      modal.querySelector(".pris").textContent = " Denne her koster " + retter.pris + " kr.";
+      modal.style.display = "block";
+      modal.addEventListener("click", () => (modal.style.display = "none"));
+    }
+  </script>
+</html>
